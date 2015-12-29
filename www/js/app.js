@@ -19,10 +19,9 @@ var databaseModule = angular.module('databaseModule', [
     'ui.grid.resizeColumns'
 ]);
 databaseModule.config(
-    function($stateProvider, $urlRouterProvider) {
+    function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise("/login/");
-        $stateProvider.
-        state('login', {
+        $stateProvider.state('login', {
             url: "/login/:form_id",
             views: {
                 "app": {
@@ -34,8 +33,7 @@ databaseModule.config(
                 pageTitle: 'Login'
             },
             authenticate: false
-        }).
-        state('register', {
+        }).state('register', {
             url: "/register/:form_id",
             views: {
                 "app": {
@@ -47,8 +45,18 @@ databaseModule.config(
                 pageTitle: 'Register'
             },
             authenticate: false
-        }).
-        state('secure', {
+        }).state('terms', {
+            url: "/terms",
+            views: {
+                "app": {
+                    templateUrl: "partials/terms.html"
+                }
+            },
+            data: {
+                pageTitle: 'Terms'
+            },
+            authenticate: false
+        }).state('secure', {
             url: "/secure",
             views: {
                 "menu_view@secure": {
@@ -63,8 +71,7 @@ databaseModule.config(
                 pageTitle: 'Home'
             },
             abstract: true
-        }).
-        state('secure.home', {
+        }).state('secure.home', {
             url: "/home",
             templateUrl: "partials/form_home.html",
             controller: 'homeCtrl',
@@ -72,17 +79,18 @@ databaseModule.config(
                 pageTitle: 'Home'
             },
             resolve: {
-                //Checks if a form needs to be filled out. 
+                //Checks if a form needs to be filled out.
                 //If the map is empty, stay in home, else go to the form.
-                checkForms: function(userService, $state) {
-                    return userService.getMyUser().then(function(data) {
+                checkForms: function (userService, $state) {
+                    return userService.getMyUser().then(function (data) {
                         var studies = data.activeStudies; //Map of activeForms
                         var formsArray = new Array();
                         var keyArray = new Array();
                         for (var key in studies) {
                             formsArray.push(studies[key]);
                             keyArray.push(key);
-                        };
+                        }
+                        ;
                         var activeStudyId = keyArray[0];
                         var form_id = formsArray[0];
                         if (form_id) {
@@ -95,8 +103,7 @@ databaseModule.config(
                 }
             },
             authenticate: true
-        }).
-        state('secure.builder', {
+        }).state('secure.builder', {
             url: "/builder/:id",
             templateUrl: "partials/formbuilder.html",
             controller: 'builderCtrl',
@@ -104,14 +111,13 @@ databaseModule.config(
                 pageTitle: 'Builder'
             },
             resolve: {
-                form: function(formService, $stateParams) {
+                form: function (formService, $stateParams) {
                     if ($stateParams.id)
                         return formService.getForm($stateParams.id);
                 }
             },
             authenticate: true
-        }).
-        state('secure.form_settings', {
+        }).state('secure.form_settings', {
             url: "/form_settings/:id",
             templateUrl: "partials/formSettings.html",
             controller: 'formSettingsCtrl',
@@ -119,21 +125,20 @@ databaseModule.config(
                 pageTitle: 'Settings'
             },
             resolve: {
-                form: function(formService, $stateParams) {
+                form: function (formService, $stateParams) {
                     return formService.getForm($stateParams.id);
                 }
             },
             authenticate: true
-        }).
-        state('secure.response', {
+        }).state('secure.response', {
             url: "/response/:id",
             templateUrl: "partials/response.html",
             controller: 'responseCtrl',
             resolve: {
-                form: function(formService, $stateParams) {
+                form: function (formService, $stateParams) {
                     return formService.getForm($stateParams.id);
                 },
-                responses: function(responseService, $stateParams) {
+                responses: function (responseService, $stateParams) {
                     return responseService.getResponsesByFormId($stateParams.id);
                 }
             },
@@ -141,8 +146,7 @@ databaseModule.config(
                 pageTitle: 'Responses'
             },
             authenticate: true
-        }).
-        state('secure.user_response', {
+        }).state('secure.user_response', {
             url: "/user_response",
             templateUrl: "partials/userResponse.html",
             controller: 'userResponseCtrl',
@@ -150,8 +154,7 @@ databaseModule.config(
                 pageTitle: 'Response Form'
             },
             authenticate: true
-        }).
-        state('download', {
+        }).state('download', {
             url: "/file/:id",
             views: {
                 "app": {
@@ -163,8 +166,7 @@ databaseModule.config(
                 pageTitle: 'Download'
             },
             authenticate: true
-        }).
-        state('form', {
+        }).state('form', {
             url: "/form/:id/:studyId",
             views: {
                 "menu": {
@@ -177,10 +179,10 @@ databaseModule.config(
                 }
             },
             resolve: {
-                form: function(formService, $stateParams, $state) {
-                    return formService.getForm($stateParams.id).then(function(data) {
+                form: function (formService, $stateParams, $state) {
+                    return formService.getForm($stateParams.id).then(function (data) {
                         return data;
-                    }, function(data) {
+                    }, function (data) {
                         console.log(data);
                         if (new Date() > data.data.expiration_date) {
                             $state.go('closed', {
@@ -204,8 +206,7 @@ databaseModule.config(
                 pageTitle: 'Form'
             },
             authenticate: false
-        }).
-        state('finished', {
+        }).state('finished', {
             url: "/finish/:id",
             views: {
                 "app": {
@@ -214,7 +215,7 @@ databaseModule.config(
                 }
             },
             resolve: {
-                form: function(formService, $stateParams) {
+                form: function (formService, $stateParams) {
                     return formService.getForm($stateParams.id);
                 }
             },
@@ -222,8 +223,7 @@ databaseModule.config(
                 pageTitle: 'Finished'
             },
             authenticate: false
-        }).
-        state('closed', {
+        }).state('closed', {
             url: "/close/:id/:form",
             views: {
                 "app": {
@@ -236,18 +236,18 @@ databaseModule.config(
     });
 
 databaseModule.run(['Restangular', '$rootScope', 'Auth', '$q', '$state', '$builder', 'userService',
-    function(Restangular, $rootScope, Auth, $q, $state, $builder, userService) {
+    function (Restangular, $rootScope, Auth, $q, $state, $builder, userService) {
         Restangular.setBaseUrl("https://www.housuggest.org:8443/FormBuilderBackendTest/");
         //Restangular.setBaseUrl("http://localhost:8080/RESTFUL-WS/");
 
-        $rootScope.Restangular = function() {
+        $rootScope.Restangular = function () {
             return Restangular;
         };
-        $rootScope.isAuthenticated = function(authenticate) {
-            userService.getMyUser().then(function(result) {
+        $rootScope.isAuthenticated = function (authenticate) {
+            userService.getMyUser().then(function (result) {
                 $rootScope.uid = result.id.toString();
                 $rootScope.uin = result.username.toString();
-            }, function(error) {
+            }, function (error) {
                 if (error.status === 0) { // NO NETWORK CONNECTION OR SERVER DOWN, WE WILL NOT LOG THEM OUT
                     ngNotify.set("Internet or Server Unavailable", {
                         type: "error",
@@ -263,7 +263,7 @@ databaseModule.run(['Restangular', '$rootScope', 'Auth', '$q', '$state', '$build
             });
             return Auth.hasCredentials();
         };
-        $rootScope.$on("$stateChangeStart", function(event, toState) {
+        $rootScope.$on("$stateChangeStart", function (event, toState) {
             $('body').removeClass('loaded');
             // User isn’t authenticated
             if (toState.name == "form" && !Auth.hasCredentials()) {
@@ -276,13 +276,13 @@ databaseModule.run(['Restangular', '$rootScope', 'Auth', '$q', '$state', '$build
             }
             $rootScope.isAuthenticated(false);
         });
-        $rootScope.$on("$stateChangeSuccess", function() {
+        $rootScope.$on("$stateChangeSuccess", function () {
             $('body').addClass('loaded');
         });
-        $rootScope.$on("$stateChangeError", function() {
+        $rootScope.$on("$stateChangeError", function () {
             $('body').addClass('loaded');
         });
-        $rootScope.$on("$stateChangeStart", function(event, toState) {
+        $rootScope.$on("$stateChangeStart", function (event, toState) {
             $('*').popover('hide'); //hide ALL the popovers (on state change)
             $('body').removeClass('loaded');
             // User isn’t authenticated
@@ -296,10 +296,10 @@ databaseModule.run(['Restangular', '$rootScope', 'Auth', '$q', '$state', '$build
             }
             $rootScope.isAuthenticated(false);
         });
-        $rootScope.$on("$stateChangeSuccess", function() {
+        $rootScope.$on("$stateChangeSuccess", function () {
             $('body').addClass('loaded');
         });
-        $rootScope.$on("$stateChangeError", function() {
+        $rootScope.$on("$stateChangeError", function () {
             $('body').addClass('loaded');
         });
 

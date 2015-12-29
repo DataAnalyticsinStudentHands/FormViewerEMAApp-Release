@@ -7,7 +7,7 @@
         <input class="form-control cellPhone" type="tel" ng-model="register.cellPhone" placeholder="Cell Phone Number (optional)">
 
         <br/>
-		Notification Preference:
+		<b>Notification Preference:</b>
         <div class="radio">
             <label> <input class="notificationPreference" type="radio" ng-model="register.notificationPreference" value="EMAIL"/> Email </label>
         </div>
@@ -17,6 +17,11 @@
         <div class="radio">
             <label> <input class="notificationPreference" type="radio" ng-model="register.notificationPreference" value="BOTH"/> Both </label>
         </div>
+
+        <label>
+            <input type="checkbox" required aria-required="true"/>
+            I agree I have read the <a ui-sref="terms">TERMS</a> and am giving my informed consent.
+        </label>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
