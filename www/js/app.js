@@ -84,13 +84,12 @@ databaseModule.config(
                 checkForms: function (userService, $state) {
                     return userService.getMyUser().then(function (data) {
                         var studies = data.activeStudies; //Map of activeForms
-                        var formsArray = new Array();
-                        var keyArray = new Array();
+                        var formsArray = [];
+                        var keyArray = [];
                         for (var key in studies) {
                             formsArray.push(studies[key]);
                             keyArray.push(key);
                         }
-                        ;
                         var activeStudyId = keyArray[0];
                         var form_id = formsArray[0];
                         if (form_id) {
