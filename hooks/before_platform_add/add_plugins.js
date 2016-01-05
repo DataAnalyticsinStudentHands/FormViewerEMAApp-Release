@@ -1,5 +1,5 @@
 #!/usr/bin/env node
- 
+
 //this hook installs all your plugins
  
 // add your plugins to this list--either 
