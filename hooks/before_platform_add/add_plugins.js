@@ -6,6 +6,7 @@
 // the identifier, the filesystem location 
 // or the URL
 var pluginlist = [
+    "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
 	"cordova-plugin-whitelist"
 ];

@@ -36,6 +36,9 @@
     <splash src="resources/ios/splash/Default-Portrait~ipad.png" height="1024" width="768"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png" height="960" width="640"/>
     <splash src="resources/ios/splash/Default~iphone.png" height="480" width="320"/>
+    <preference name="StatusBarOverlaysWebView" value="false"/>
+    <preference name="StatusBarBackgroundColor" value="#FFFFFF"/>
+    <preference name="StatusBarStyle" value="default"/>
   </platform>
   <platform name="android">
     <icon src="resources\android\icon\drawable-ldpi-icon.png" density="ldpi"/>
@@ -59,8 +62,5 @@
   </platform>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
-  <preference name="StatusBarOverlaysWebView" value="false"/>
-  <preference name="StatusBarBackgroundColor" value="#FFFFFF"/>
-  <preference name="StatusBarStyle" value="default"/>
   <icon src="resources\android\icon\drawable-xhdpi-icon.png"/>
 </widget>
