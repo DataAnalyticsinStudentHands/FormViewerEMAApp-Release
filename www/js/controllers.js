@@ -2,95 +2,61 @@
 /* Controllers */
 var formBuilderController = angular.module('formBuilderControllerModule', []);
 
-formBuilderController.controller('loginCtrl', ['$scope', 'Auth', '$state', 'ngNotify', '$stateParams',
-    function($scope, Auth, $state, ngNotify, $stateParams) {
+formBuilderController.controller('loginCtrl',
+    function ($scope, Auth, $state, ngNotify, $stateParams, Restangular) {
         $scope.form_id = $stateParams.form_id;
         if ($scope.isAuthenticated() === true) {
-            $scope.loginResultPromise = $scope.Restangular().all("users").one("myUser").get();
-            $scope.loginResultPromise.then(function(result) {
-                $scope.loginResult = result;
-                Auth.confirmCredentials();
-                $scope.studies = result.activeStudies; //THIS IS THE MAP
-                $scope.formsArray = new Array();
-                $scope.keyArray = new Array();
-                for (var key in $scope.studies) {
-                    $scope.formsArray.push($scope.studies[key]);
-                    $scope.keyArray.push(key);
-                };
-                $scope.activeStudyId = $scope.keyArray[0];
-                $scope.form_id = $scope.formsArray[0];
-                if ($scope.form_id) $state.go('form', {
-                    id: $scope.form_id,
-                    studyId: $scope.activeStudyId
-                });
-                else $state.go('secure.home', {
-                    rdr: true
-                }); //TODO: Create new state that says "You have no forms to respond to."
-            }, function() {
-                ngNotify.set("Login failure, please try again!", "error");
-                $scope.loginMsg = "Arghhh, matey! Check your username or password.";
-                Auth.clearCredentials();
-            });
+            //Point 'em to logged in page of app
+            $state.go('secure.home');
         }
-
 
         //we need to put the salt on server + client side and it needs to be static
         $scope.salt = "nfp89gpe"; //PENDING
-        $scope.submit = function() {
+        $scope.submit = function () {
             if ($scope.userName && $scope.passWord) {
                 $scope.passWordHashed = String(CryptoJS.SHA512($scope.passWord + $scope.userName + $scope.salt));
                 Auth.setCredentials($scope.userName, $scope.passWordHashed);
-                $scope.loginResultPromise = $scope.Restangular().all("users").one("myUser").get();
-                $scope.loginResultPromise.then(function(result) {
+                $scope.loginResultPromise = Restangular.all("users").one("myUser").get();
+                $scope.loginResultPromise.then(function (result) {
                     $scope.loginResult = result;
                     ngNotify.set("Login success!", "success");
                     Auth.confirmCredentials();
-                    $state.go('secure.home'); //TODO: Create new state that says "You have no forms to respond to."
-                }, function() {
-                    ngNotify.set("Login failure, please try again!", "error");
-                    $scope.loginMsg = "Arghhh, matey! Check your username or password.";
+                    if ($scope.form_id) $state.go('form', {id: $scope.form_id}); else $state.go('secure.home');
+                }, function (failure) {
+                    console.log(failure);
+                    if (failure.status = 501 && failure.data.message) {
+                        ngNotify.set(failure.data.message, "error");
+                    } else {
+                        ngNotify.set("Incorrect username or password.", "error");
+                    }
                     Auth.clearCredentials();
                 });
                 $scope.userName = '';
                 $scope.passWord = '';
-            } else if (!$scope.userName && !$scope.passWord) {
-                $scope.loginMsg = "You kiddin' me m8? No username or password?";
-            } else if (!$scope.userName) {
-                $scope.loginMsg = "No username? Tryina hack me?";
-                $scope.loginResult = "";
-            } else if (!$scope.passWord) {
-                $scope.loginMsg = "What? No password!? Where do you think you're going?";
-                $scope.loginResult = "";
             }
         };
-    }
-]);
-formBuilderController.controller('registerCtrl', ['$scope', '$state', 'Auth', 'ngNotify', '$stateParams',
-    function($scope, $state, Auth, ngNotify, $stateParams) {
-        $scope.registerUser = function() {
+    });
+
+formBuilderController.controller('registerCtrl',
+    function ($scope, $state, Auth, ngNotify, $stateParams, Restangular) {
+        $scope.registerUser = function () {
             var errorMSG;
             if ($scope.password.pw == $scope.password.pwc) {
                 Auth.setCredentials("Visitor", "test");
                 $scope.salt = "nfp89gpe";
                 $scope.register.password = String(CryptoJS.SHA512($scope.password.pw + $scope.register.username + $scope.salt));
-                $scope.$parent.Restangular().all("users").post($scope.register).then(
-                    function() {
+                Restangular.all("users").post($scope.register).then(
+                    function () {
                         Auth.clearCredentials();
-                        ngNotify.set("Registration success!", "success");
-                        $state.go("login", {
-                            "form_id": $stateParams.form_id
-                        }, {
-                            reload: true
-                        });
-                    },
-                    function(error) {
+                        ngNotify.set("Registration success, please check your email to activate account.", "success");
+                        $state.go("login", {"form_id": $stateParams.form_id}, {reload: true});
+                    }, function (error) {
                         errorMSG = "Registration Failure!";
                         if (error.status == 409)
                             errorMSG = "Account with e-mail address already exists!";
                         ngNotify.set(errorMSG, "error");
                         Auth.clearCredentials();
-                    },
-                    function() {
+                    }, function () {
                         $scope.register = null;
                         $scope.password = null;
                     }
@@ -100,9 +66,11 @@ formBuilderController.controller('registerCtrl', ['$scope', '$state', 'Auth', 'n
                 errorMSG = "Passwords do not match.";
                 ngNotify.set(errorMSG, "error");
             }
+        };
+        $scope.cancel = function () {
+            $state.go('login');
         }
-    }
-]);
+    });
 
 //Controller for the home state
 formBuilderController.controller('homeCtrl', ['$scope', 'Auth', '$state', 'formService', '$interval', 'ngNotify', 'userService',
