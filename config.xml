@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="edu.uh.honors.dash.ema" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
+<widget id="edu.uh.honors.dash.ema" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
   <name>DASH EMA</name>
   <description>
         EMA application created by DASH students at UH.
