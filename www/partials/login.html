@@ -1,10 +1,13 @@
 <div class="container">
     <form class="form-signin" ng-submit="submit()">
         <h2 class="form-signin-heading">Log In</h2>
-        <input id="inputEmail" class="form-control email" type="email" ng-model="userName" placeholder="Email address" required autofocus>
-        <input type="password" id="inputPassword" class="form-control pw" ng-model="passWord" placeholder="Password" required>
+        <input id="inputEmail" class="form-control email" type="email" ng-model="userName" placeholder="Email address"
+               required autofocus>
+        <input type="password" id="inputPassword" class="form-control pw" ng-model="passWord" placeholder="Password"
+               required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <div class="pull-right"><a ui-sref="register({form_id: form_id})">REGISTER HERE</a></div>
-        <div class="pull-left"><a href="http://hnetdev.hnet.uh.edu/PasswordReset/#/requestReset/FormBuilder">Forgot password?</a></div>
+        <div class="pull-left"><a href="http://housuggest.org/PasswordReset/#/requestReset/FormBuilder">Forgot
+            password?</a></div>
     </form>
 </div>
