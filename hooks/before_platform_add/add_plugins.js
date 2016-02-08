@@ -8,7 +8,8 @@
 var pluginlist = [
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
-	"cordova-plugin-whitelist"
+	"cordova-plugin-whitelist",
+    "org.apache.cordova.inappbrowser@0.6.0"
 ];
  
 // no need to configure below
